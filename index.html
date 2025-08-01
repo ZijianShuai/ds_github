@@ -26,7 +26,7 @@
       width: 100%;
       max-width: 600px;
       margin-top: 20px;
-      text-align: center;
+      text-align: left;
     }
     .search-box {
       display: flex;
@@ -52,17 +52,22 @@
       margin-top: 20px;
       font-size: 18px;
       color: #333;
+      text-align: left;
     }
     .chat-button {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background-color: #28a745;
-      color: white;
+      background: transparent;
       border: none;
-      padding: 10px 15px;
-      border-radius: 50px;
+      width: 50px;
+      height: 50px;
       cursor: pointer;
+    }
+    .chat-button img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
     }
     .chat-box {
       position: fixed;
@@ -100,19 +105,36 @@
       padding: 10px;
       cursor: pointer;
     }
+    .loading {
+      margin-top: 20px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007BFF;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="pic.png" alt="picture">
+    <img src="pic.jpg" alt="picture"> 
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="输入快递单号或订单编号查询快递状态">
       <button onclick="searchPackage()">查询</button>
     </div>
+    <div id="loader" class="loading" style="display:none;"></div>
     <div class="result" id="result"></div>
   </div>
 
-  <button class="chat-button" onclick="toggleChat()">客服</button>
+  <button class="chat-button" onclick="toggleChat()">
+    <img src="kf.png" alt="客服">
+  </button>
+
   <div class="chat-box" id="chatBox">
     <div class="chat-messages" id="chatMessages">
       <div><strong>小雪:</strong> 您好我是机器人客服小雪，您可以输入单号或订单编号查询包裹状态，网页客服暂不支持更多功能，更多功能请移步官方小程序。</div>
@@ -127,11 +149,18 @@
     function searchPackage() {
       const input = document.getElementById('searchInput').value.trim();
       const result = document.getElementById('result');
-      if (input === 'BE828041') {
-        result.textContent = '包裹状态：通关中';
-      } else {
-        result.textContent = '单号不存在';
-      }
+      const loader = document.getElementById('loader');
+      result.textContent = '';
+      loader.style.display = 'inline-block';
+
+      setTimeout(() => {
+        loader.style.display = 'none';
+        if (input === 'BE828041') {
+          result.textContent = '包裹状态：通关中';
+        } else {
+          result.textContent = '错误：单号不存在'; 
+        }
+      }, 400);
     }
 
     function toggleChat() {
@@ -147,12 +176,12 @@
         chatMessages.innerHTML += `<div><strong>您:</strong> ${message}</div>`;
         let reply = '暂时无法查询到该订单';
         if (message === 'BE828041') {
-          reply = '包裹状态：通关中';
+          reply = '包裹状态：通关中'; 
         }
         setTimeout(() => {
           chatMessages.innerHTML += `<div><strong>小雪:</strong> ${reply}</div>`;
           chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 500);
+        }, 300);
         chatInput.value = '';
       }
     }
