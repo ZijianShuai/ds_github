@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>秉运包裹查询</title>
+  <link rel="icon" href="bs.png">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin-top: 20px;
+      text-align: left;
+    }
+    .search-box {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 70%;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+      outline: none;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+      text-align: left;
+    }
+    .chat-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .chat-button img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .chat-box {
+      position: fixed;
+      bottom: 70px;
+      right: 20px;
+      width: 300px;
+      max-height: 400px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: white;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    .chat-messages {
+      padding: 10px;
+      flex: 1;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    .chat-input input {
+      flex: 1;
+      border: none;
+      padding: 10px;
+      outline: none;
+    }
+    .chat-input button {
+      background-color: #007BFF;
+      border: none;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+    }
+    .loading {
+      margin-top: 20px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007BFF;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="pic.jpg" alt="picture"> 
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="输入快递单号或订单编号查询快递状态">
+      <button onclick="searchPackage()">查询</button>
+    </div>
+    <div id="loader" class="loading" style="display:none;"></div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <button class="chat-button" onclick="toggleChat()">
+    <img src="kf.png" alt="客服">
+  </button>
+
+  <div class="chat-box" id="chatBox">
+    <div class="chat-messages" id="chatMessages">
+      <div><strong>小雪:</strong> 您好我是机器人客服小雪，您可以输入单号或订单编号查询包裹状态，网页客服暂不支持更多功能，更多功能请移步官方小程序。</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="chatInput" placeholder="请输入...">
+      <button onclick="sendMessage()">发送</button>
+    </div>
+  </div>
+
+  <script>
+    function searchPackage() {
+      const input = document.getElementById('searchInput').value.trim();
+      const result = document.getElementById('result');
+      const loader = document.getElementById('loader');
+      result.textContent = '';
+      loader.style.display = 'inline-block';
+
+      setTimeout(() => {
+        loader.style.display = 'none';
+        if (input === 'BE828041') {
+          result.textContent = '-包裹状态：通关中-';
+        } else {
+          result.textContent = '-错误：单号不存在-'; 
+        }
+      }, 400);
+    }
+
+    function toggleChat() {
+      const chatBox = document.getElementById('chatBox');
+      chatBox.style.display = chatBox.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function sendMessage() {
+      const chatInput = document.getElementById('chatInput');
+      const message = chatInput.value.trim();
+      const chatMessages = document.getElementById('chatMessages');
+      if (message) {
+        chatMessages.innerHTML += `<div><strong>您:</strong> ${message}</div>`;
+        let reply = '-暂时无法查询到该订单-';
+        if (message === 'BE828041') {
+          reply = '-包裹状态：通关中-'; 
+        }
+        setTimeout(() => {
+          chatMessages.innerHTML += `<div><strong>小雪:</strong> ${reply}</div>`;
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 300);
+        chatInput.value = '';
+      }
+    }
+  </script>
+</body>
+</html>
