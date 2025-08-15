@@ -181,7 +181,7 @@
         chatMessages.innerHTML += `<div><strong>您:</strong> ${message}</div>`;
         let reply = '-暂时无法查询到该订单-';
         if (message === 'BE828041') {
-          reply = '-包裹状态：已放行-'; 
+          reply = '-包裹状态：清关完成，海关已放行-'; 
         }
         setTimeout(() => {
           chatMessages.innerHTML += `<div><strong>小雪:</strong> ${reply}</div>`;
@@ -194,3 +194,4 @@
 </body>
 
 </html>
+
